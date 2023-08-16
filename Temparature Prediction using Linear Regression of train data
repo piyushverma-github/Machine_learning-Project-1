@@ -1,0 +1,62 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+import xlrd
+
+def load_data(file_path):
+    return pd.read_excel(file_path, engine='xlrd')
+
+def hypothesis(theta, X):
+    return theta[0] + theta[1] * X
+
+def compute_cost(theta, X, y):
+    m = len(X)
+    error = hypothesis(theta, X) - y
+    return (1 / (2 * m)) * np.sum(error ** 2)
+
+def gradient_descent(theta, X, y, alpha, num_iterations):
+    m = len(X)
+    cost_history = []
+
+    for _ in range(num_iterations):
+        gradient = np.dot(X.T, (hypothesis(theta, X) - y)) / m
+        theta -= alpha * gradient
+        cost = compute_cost(theta, X, y)
+        cost_history.append(cost)
+
+    return theta, cost_history
+
+def plot_data_and_line(X, y, theta):
+    ax = plt.axes()
+    ax.set_facecolor("orange")
+    plt.scatter(X, y, marker='P', c='blue', label='Data')
+    plt.plot(X, hypothesis(theta, X), color='green', label='Regression Line')
+    plt.xlabel("chirps/sec for the striped ground cricket")
+    plt.ylabel("temperature in degrees Fahrenheit")
+    plt.legend()
+    plt.savefig('temp.png')
+    plt.show()
+
+def main():
+    data = load_data('Downloads/dataset.xls')
+    X = data['X'].values
+    y = data['Y'].values
+
+    np.random.seed(3)
+    theta = np.random.rand(2)
+
+    learning_rate = 0.001
+    iterations = 100
+
+    optimized_theta, cost_history = gradient_descent(theta, X, y, learning_rate, iterations)
+
+    print("Optimized theta:", optimized_theta)
+    plot_data_and_line(X, y, optimized_theta)  # Plotting with the original X array
+
+    x_new = np.array([16.2])
+    prediction = hypothesis(optimized_theta, x_new)
+    print("Predicted value:", prediction)
+
+
+if __name__ == "__main__":
+    main()
