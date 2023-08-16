@@ -1,8 +1,8 @@
-- 👋 Hi, I’m @535111
-- 👀 I’m interested in Programming
-- 🌱 I’m currently learning Computer Science 
+- 👋 Hi, I’m Piyush Verma
+- 👀 I’m a Programmer
+- 🌱 I’m currently a Computer Science Engineering Student
 - 💞️ I’m looking to collaborate on google
-- 📫 How to reach me through social media
+- 📫 You can connect with me on linkedin through this link: https://www.linkedin.com/in/piyush-verma-397825225
 
 <!---
 535111/535111 is a ✨ special ✨ repository because its `README.md` (this file) appears on your GitHub profile.
