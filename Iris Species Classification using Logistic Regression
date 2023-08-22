@@ -1,0 +1,59 @@
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from sklearn.preprocessing import LabelEncoder
+from sklearn.model_selection import train_test_split
+from sklearn.linear_model import LogisticRegression
+
+df = pd.read_csv('Downloads/iris.csv')
+
+# Drop the 'Id' column since it doesn't contribute to classification
+df = df.drop(columns=['Id'])
+
+df.info()
+print(df['Species'].value_counts())
+
+# Check for missing values
+print(df.isnull().sum())
+
+# Explore feature distributions using histograms
+df['SepalLengthCm'].hist(color='green')
+plt.title('Sepal Length Histogram')
+plt.show()
+
+df['SepalWidthCm'].hist(color='blue')
+plt.title('Sepal Width Histogram')
+plt.show()
+
+# Encode the 'Species' column using LabelEncoder
+le = LabelEncoder()
+df['Species'] = le.fit_transform(df['Species'])
+
+# Select only numeric columns for correlation computation
+numeric_columns = df.select_dtypes(include=[np.number])
+correlation_matrix = numeric_columns.corr()
+print(correlation_matrix)
+
+# Split the data into features (X) and target (Y)
+X = df.drop(columns=['Species'])
+Y = df['Species']
+
+# Split the data into training and testing sets
+X_train, X_test, Y_train, Y_test = train_test_split(X, Y, test_size=0.25, random_state=42)
+
+# Initialize the Logistic Regression model
+model = LogisticRegression()
+model.fit(X_train, Y_train)
+
+# Prepare new sample for prediction with correct column names
+new_sample = pd.DataFrame([[9.8, 4.6, 2.5, 0.6]], columns=X.columns) #we can change the value 
+
+# Predict the type of iris from the species
+predicted_species = le.inverse_transform(model.predict(new_sample))
+
+print("Predicted Species:", predicted_species)
+
+# Evaluate the accuracy of the model on the test data.
+accuracy = model.score(X_test, Y_test)
+
+print("Accuracy: {:.2f}%".format(accuracy * 100))
