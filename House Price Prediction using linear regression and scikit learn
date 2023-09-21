@@ -1,0 +1,52 @@
+import numpy as np
+import pandas as pd
+import matplotlib.pyplot as plt
+import seaborn as sns
+%matplotlib inline
+# load the dataset
+df = pd.read_csv('Downloads/House_Rent_Dataset.csv')
+df.head()
+df.describe()
+df.columns
+sns.pairplot(df)
+# data preprocessing(cleaning dataset)
+data1 = df.dropna()
+data1
+sns.displot(data1['Rent'],kde=True)
+df.corr()
+sns.heatmap(df.corr(),annot=True)
+# features from dataset which have integer values 
+X= data1[['BHK', 'Size', 'Bathroom']]
+# target variable(y=rent) 
+y = data1['Rent']
+from sklearn.model_selection import train_test_split
+# split the data into train and test 
+X_train, X_test, y_train, y_test = train_test_split(X,y,test_size=0.4,random_state=101)
+#using scikit_learn_model for linear regr.
+from sklearn.linear_model import LinearRegression
+lm = LinearRegression() #object of Linear Regression
+lm.fit(X_train,y_train)
+print(lm.intercept_)
+lm.coef_
+X_train.columns
+cdf=pd.DataFrame(lm.coef_,X.columns,columns=['Coeff'])
+cdf
+predictions= lm.predict(X_test)
+predictions
+y_test
+plt.scatter(y_test,predictions)
+sns.displot((y_test-predictions),kde=True)
+from sklearn import metrics
+print('MAE : ',metrics.mean_absolute_error(y_test,predictions))
+print('MSE : ',metrics.mean_squared_error(y_test,predictions))
+print('RMSE : ',np.sqrt(metrics.mean_squared_error(y_test,predictions)))
+input_data = (1,1000,2)
+
+#converting input data into numpy array
+input_data_numpy=np.asarray(input_data)
+
+#reshaping
+input_data_reshaped = input_data_numpy.reshape(1,-1)
+
+prediction = lm.predict(input_data_reshaped)
+print("Predicted price : ",prediction[0])
